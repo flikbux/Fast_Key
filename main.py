@@ -38,8 +38,8 @@ for i in range(len(edges)):
     for j in range(len(edges[i])):
         print(edges[i][j], end=' ')
 cv2.destroyAllWindows()
-
-if edges is not None:
+#----------------------- partie detect circle
+'''if edges is not None:
 
     # Convert the circle parameters a, b and r to integers.
     detected_circles = np.uint16(np.around(edges))
@@ -53,4 +53,4 @@ if edges is not None:
         # Draw a small circle (of radius 1) to show the center.
         cv2.circle(img, (a, b), 1, (0, 0, 255), 3)
         cv2.imshow("Detected Circle", img)
-        cv2.waitKey(0)
+        cv2.waitKey(0)'''
