@@ -31,7 +31,6 @@ edges = cv2.Canny(image=img_blur, threshold1=100, threshold2=200)  # Canny Edge 
 # Display Canny Edge Detection Image
 cv2.imshow('Canny Edge Detection', edges)
 cv2.waitKey(0)
-print(edges)
 data = im.fromarray(edges)
 data.save('gfg_dummy_pic.png')
 for i in range(len(edges)):
@@ -39,18 +38,36 @@ for i in range(len(edges)):
         print(edges[i][j], end=' ')
 cv2.destroyAllWindows()
 #----------------------- partie detect circle
+edgepic = cv2.imread('gfg_dummy_pic.png')
 if edges is not None:
+    # Detect circles using Hough Transform
+    detected_circles = cv2.HoughCircles(
+        edges,
+        cv2.HOUGH_GRADIENT,  # Corrected method
+        dp=1,  # Inverse ratio of the accumulator resolution to the image resolution
+        minDist=10,  # Minimum distance between detected centers
+        param1=100,  # Upper threshold for the Canny edge detector
+        param2=50,  # Accumulator threshold for the circle centers at the detection stage
+        minRadius=10,  # Minimum circle radius
+        maxRadius=0   # Maximum circle radius
+    )
 
-    # Convert the circle parameters a, b and r to integers.
-    detected_circles = np.uint16(np.around(edges))
+    # If some circles are detected, draw them
+    if detected_circles is not None:
+        detected_circles = np.uint16(np.around(detected_circles))  # Round to integers
+        print("Detected circles: ", detected_circles)
 
-    for pt in detected_circles[0, :]:
-        a, b, r = pt[0], pt[1], pt[2]
+        for pt in detected_circles[0, :]:  # Loop through the detected circles
+            a, b, r = pt[0], pt[1], pt[2]  # Extract circle parameters
 
-        # Draw the circumference of the circle.
-        cv2.circle(img, (a, b), r, (0, 255, 0), 2)
+            # Draw the circumference of the circle.
+            cv2.circle(edgepic, (a, b), r, (0, 255, 0), 2)
 
-        # Draw a small circle (of radius 1) to show the center.
-        cv2.circle(img, (a, b), 1, (0, 0, 255), 3)
-        cv2.imshow("Detected Circle", img)
+            # Draw a small circle (of radius 1) to show the center.
+            cv2.circle(edgepic, (a, b), 1, (0, 0, 255), 3)
+
+        # Display the result
+        cv2.imshow("Detected Circle", edgepic)
         cv2.waitKey(0)
+
+cv2.destroyAllWindows()
